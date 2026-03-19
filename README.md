@@ -1,1 +1,1 @@
-domain: ivanm.xyz
+ivanm.xyz
