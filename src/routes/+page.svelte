@@ -18,14 +18,14 @@
     console.log("hello");
 </script>
 <div>
-    <img class="object-contain h-70 w-70" src="/spiral.jpeg" alt="">
+    <img class="object-contain h-40 sm:h-60 md:h-70 w-40 sm:w-60 md:w-70" src="/spiral.jpeg" alt="">
 </div>
 <main
-    class="mt-20 flex items-center justify-center bg-black text-white font-vt323 relative overflow-y-auto md:overflow-hidden"
+    class="flex flex-col items-center justify-center bg-black text-white font-vt323 relative overflow-hidden h-screen"
 >
     <button class="lang-toggle text-lg sm:text-xl md:text-2xl" onclick={toggleLang}>lang: {lang}</button>
 
-    <div class="center-stack">
+    <div class="center-stack flex-shrink-0">
         <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-mono">IVAN MATIASH</h1>
         <p class="text-lg sm:text-xl md:text-2xl opacity-80">
             {lang === "EN"
