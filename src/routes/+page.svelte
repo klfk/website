@@ -20,7 +20,7 @@
     <img class="object-contain h-70 w-70" src="/spiral.jpeg" alt="">
 </div>
 <main
-    class="mt-20 flex items-center justify-center bg-black text-white font-vt323 relative"
+    class="mt-20 flex items-center justify-center bg-black text-white font-vt323 relative overflow-y-auto md:overflow-hidden"
 >
     <button class="lang-toggle text-lg sm:text-xl md:text-2xl" onclick={toggleLang}>lang: {lang}</button>
 
