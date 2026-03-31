@@ -22,17 +22,17 @@
 <main
     class="mt-20 flex items-center justify-center bg-black text-white font-vt323 relative"
 >
-    <button class="lang-toggle text-2xl" onclick={toggleLang}>lang: {lang}</button>
+    <button class="lang-toggle text-lg sm:text-xl md:text-2xl" onclick={toggleLang}>lang: {lang}</button>
 
     <div class="center-stack">
-        <h1 class="text-5xl font-mono">IVAN MATIASH</h1>
-        <p class="text-2xl opacity-80">
+        <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-mono">IVAN MATIASH</h1>
+        <p class="text-lg sm:text-xl md:text-2xl opacity-80">
             {lang === "EN"
                 ? "student at Informatikmittelschule Basel (2024 - 2028)"
                 : "Schüler an der Informatikmittelschule Basel (2024 - 2028)"}
         </p>
         <br>
-        <p class = "text-2xl">{#if lang === "EN"}
+        <p class="text-lg sm:text-xl md:text-2xl">{#if lang === "EN"}
             Hello! I am Ivan, 17 years old, located in Basel. I am an IT student
             currently interested in low-level programming (C, Rust). So far I
             have some experience working with Python, PHP, database systems like
@@ -48,7 +48,7 @@
             {/if}
         </p>
 
-        <nav class="mt-8 space-y-3 text-2xl">
+        <nav class="mt-8 space-y-3 text-lg sm:text-xl md:text-2xl">
             <a href="https://github.com/klfk" class="block hover:underline">github: @klfk</a>
             <a href="https://www.linkedin.com/in/ivan-matiash-4947a9381/" class="hover:underline">linkedin</a>
             <br>
