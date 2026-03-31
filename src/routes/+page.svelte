@@ -3,11 +3,12 @@
     let showCopied = $state(false);
 
     function copyEmail() {
-        navigator.clipboard.writeText("ivan.matjash@gmail.com");
-        showCopied = true;
-        setTimeout(() => {
-            showCopied = false;
-        }, 1000);
+        navigator.clipboard.writeText("ivan.matjash@gmail.com").then(() => {
+            showCopied = true;
+            setTimeout(() => {
+                showCopied = false;
+            }, 1000);
+        });
     }
 
     function toggleLang() {
@@ -49,19 +50,20 @@
         </p>
 
         <nav class="mt-8 space-y-3 text-lg sm:text-xl md:text-2xl">
-            <a href="https://github.com/klfk" class="block hover:underline">github: @klfk</a>
-            <a href="https://www.linkedin.com/in/ivan-matiash-4947a9381/" class="hover:underline">linkedin</a>
+            <a href="https://github.com/klfk" target="_blank" class="hover:underline">github: @klfk</a>
+            <br>
+            <a href="https://www.linkedin.com/in/ivan-matiash-4947a9381/" target="_blank" class="hover:underline">linkedin</a>
             <br>
             <div class="relative">
                 <button onclick={copyEmail} class="button-clean hover:underline">
                     contact: ivan[dot]matjash(at)gmail(dot)com
                 </button>
-                {#if showCopied}
-                    <div class="absolute top-full left-0 mt-1 text-white font-vt323 text-lg">
-                        {lang === "EN" ? "copied!" : "kopiert!"}
-                    </div>
-                {/if}
             </div>
+            {#if showCopied}
+                <div class="fixed transform text-white font-vt323 text-2xl ">
+                    {lang === "EN" ? "copied!" : "kopiert!"}
+                </div>
+            {/if}
         </nav>
     </div>
 </main>
