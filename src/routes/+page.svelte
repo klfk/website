@@ -17,23 +17,21 @@
 
     console.log("hello");
 </script>
-<div>
-    <img class="object-contain h-40 sm:h-60 md:h-70 w-40 sm:w-60 md:w-70" src="/spiral.jpeg" alt="">
-</div>
 <main
-    class="flex flex-col items-center justify-center bg-black text-white font-vt323 relative overflow-hidden h-screen"
+    class="min-h-screen flex flex-col justify-center bg-black text-white font-vt323 relative overflow-y-auto px-4 py-8 sm:py-12 md:py-16"
 >
+    <img class="object-contain h-32 w-32 sm:h-48 sm:w-48 md:h-64 md:w-64 mb-4 sm:mb-6 md:mb-8" src="/spiral.jpeg" alt="">
     <button class="lang-toggle text-lg sm:text-xl md:text-2xl" onclick={toggleLang}>lang: {lang}</button>
 
-    <div class="center-stack flex-shrink-0">
-        <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-mono">IVAN MATIASH</h1>
-        <p class="text-lg sm:text-xl md:text-2xl opacity-80">
+    <div class="center-stack">
+        <h1 class="text-xl sm:text-2xl md:text-4xl lg:text-5xl font-mono">IVAN MATIASH</h1>
+        <p class="text-sm sm:text-base md:text-xl opacity-80">
             {lang === "EN"
                 ? "student at Informatikmittelschule Basel (2024 - 2028)"
                 : "Schüler an der Informatikmittelschule Basel (2024 - 2028)"}
         </p>
         <br>
-        <p class="text-lg sm:text-xl md:text-2xl">{#if lang === "EN"}
+        <p class="text-sm sm:text-base md:text-lg">{#if lang === "EN"}
             Hello! I am Ivan, 17 years old, located in Basel. I am an IT student
             currently interested in low-level programming (C, Rust). So far I
             have some experience working with Python, PHP, database systems like
@@ -49,11 +47,13 @@
             {/if}
         </p>
 
-        <nav class="mt-8 space-y-3 text-lg sm:text-xl md:text-2xl">
-            <a href="https://github.com/klfk" target="_blank" class="hover:underline">github: @klfk</a>
-            <br>
-            <a href="https://www.linkedin.com/in/ivan-matiash-4947a9381/" target="_blank" class="hover:underline">linkedin</a>
-            <br>
+        <nav class="mt-6 sm:mt-8 space-y-2 sm:space-y-3 text-xs sm:text-sm md:text-base">
+            <div>
+                <a href="https://github.com/klfk" target="_blank" class="hover:underline">github: @klfk</a>
+            </div>
+            <div>
+                <a href="https://www.linkedin.com/in/ivan-matiash-4947a9381/" target="_blank" class="hover:underline">linkedin</a>
+            </div>
             <div class="relative">
                 <button onclick={copyEmail} class="button-clean hover:underline">
                     contact: ivan[dot]matjash(at)gmail(dot)com
