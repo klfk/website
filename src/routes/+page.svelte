@@ -1,8 +1,13 @@
 <script lang="ts">
     let lang = $state<"EN" | "DE">("EN");
+    let showCopied = $state(false);
 
     function copyEmail() {
         navigator.clipboard.writeText("ivan.matjash@gmail.com");
+        showCopied = true;
+        setTimeout(() => {
+            showCopied = false;
+        }, 1000);
     }
 
     function toggleLang() {
@@ -12,7 +17,7 @@
     console.log("hello");
 </script>
 <div>
-    <img class="object-contain h-70 w-70" src="/src/lib/assets/spiral.jpeg" alt="">
+    <img class="object-contain h-70 w-70" src="/spiral.jpeg" alt="">
 </div>
 <main
     class="mt-20 flex items-center justify-center bg-black text-white font-vt323 relative"
@@ -47,9 +52,16 @@
             <a href="https://github.com/klfk" class="block hover:underline">github: @klfk</a>
             <a href="https://www.linkedin.com/in/ivan-matiash-4947a9381/" class="hover:underline">linkedin</a>
             <br>
-            <button onclick={copyEmail} class="button-clean hover:underline">
-                contact: ivan[dot]matjash(at)gmail(dot)com
-            </button>
+            <div class="relative">
+                <button onclick={copyEmail} class="button-clean hover:underline">
+                    contact: ivan[dot]matjash(at)gmail(dot)com
+                </button>
+                {#if showCopied}
+                    <div class="absolute top-full left-0 mt-1 text-white font-vt323 text-lg">
+                        {lang === "EN" ? "copied!" : "kopiert!"}
+                    </div>
+                {/if}
+            </div>
         </nav>
     </div>
 </main>
