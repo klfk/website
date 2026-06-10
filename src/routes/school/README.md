@@ -34,52 +34,37 @@ Dieser Ordner enthält alle Routen und Ressourcen für das IDAF-Projekt
 
 ---
 
-## Cloudflare Access — Schutz für `/school/documents`
+## Schutz für `/school/documents` — PIN-Login
 
-Der Schutz läuft vollständig auf Cloudflare-Ebene, **bevor** SvelteKit die
-Anfrage sieht. Der SvelteKit-Code in `documents/+page.svelte` braucht keine
-eigene Authentifizierungslogik.
+Der Schutz läuft direkt in SvelteKit über eine einfache PIN-Abfrage.
+Es ist **kein Cloudflare Zero Trust / Access** nötig — nur eine einzige
+Umgebungsvariable in den Cloudflare Pages-Einstellungen.
 
-### Schritt-für-Schritt (Cloudflare Dashboard)
+### Einmaliges Setup (Cloudflare Pages Dashboard)
 
-1. **Zero Trust öffnen**  
-   dashboard.cloudflare.com → Konto wählen → **Zero Trust** → **Access** →
-   **Applications**
+1. Cloudflare Dashboard öffnen → dein Pages-Projekt → **Settings** →
+   **Environment variables** → **Add variable**
+2. Name: `SCHOOL_DOCS_PASSWORD`  
+   Value: einen PIN nach Wahl (z. B. `847291`)  
+   Scope: **Production** (und optional Preview)
+3. Speichern → nächsten Deploy abwarten (oder manuell triggern)
 
-2. **Neue Application anlegen**  
-   - Typ: **Self-hosted**  
-   - Name: `ivanm.xyz – Dokumente`  
-   - Application Domain: `ivanm.xyz`  
-   - Path: `school/documents`  
-   - Session Duration: z. B. `24 hours`
+Fertig. Wer `/school/documents` öffnet, sieht eine PIN-Eingabe.
+Nach korrekter Eingabe wird ein `httpOnly`-Cookie für 8 Stunden gesetzt.
 
-3. **Policy hinzufügen**  
-   Empfohlene Variante für Bewerbungsgespräche:
+### Lokal testen
 
-   **Option A — One-Time PIN (einfachste Variante)**  
-   - Policy name: `OTP Login`  
-   - Action: `Allow`  
-   - Rule: **Emails** → `ivan.matjash@gmail.com` (und weitere, falls gewünscht)  
-   - Login method: **One-time PIN** (Cloudflare schickt einen 6-stelligen Code
-     an die eingetragene E-Mail-Adresse)
+```bash
+# .env anlegen (nicht committen — steht im .gitignore)
+echo 'SCHOOL_DOCS_PASSWORD=123456' > .env
+npm run dev
+```
 
-   **Option B — spezifische E-Mail-Allowlist**  
-   - Gleicher Aufbau, aber mehrere E-Mail-Adressen eintragen (z. B. die
-     HR-Person bei Sympany)
+### PIN ändern
 
-4. **App-Launcher deaktivieren** (optional, sauberer)  
-   → Appearance → App Launcher visibility: **Off**
-
-5. **Testen**  
-   Im Inkognito-Fenster `https://ivanm.xyz/school/documents` aufrufen.
-   Cloudflare zeigt einen Login-Screen. Nach erfolgreicher PIN-Eingabe
-   landet man auf der Dokumenten-Seite.
-
-> **Hinweis zu `wrangler.toml`:** Cloudflare Pages-Projekte konfigurieren
-> Access normalerweise im Dashboard, nicht über `wrangler.toml`. Wenn du
-> Pages Functions einsetzt, kannst du den Schutz alternativ über einen
-> `_routes.json`-Eintrag mit dem Cloudflare-Access-Worker ausdrücken — das
-> ist aber für diesen Use-Case nicht nötig.
+In Cloudflare Pages → Settings → Environment variables → Wert anpassen →
+neuen Deploy starten. Alle laufenden Sessions laufen nach 8 Stunden
+automatisch ab.
 
 ---
 
