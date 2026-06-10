@@ -1,6 +1,16 @@
 <script lang="ts">
-    let lang = $state<"EN" | "DE">("EN");
+    import bio from "$lib/content/bio.json";
+
+    type Language = "EN" | "DE";
+    type ContentLanguage = "en" | "de";
+
+    let lang = $state<Language>("EN");
     let showCopied = $state(false);
+
+    const languageKey: Record<Language, ContentLanguage> = {
+        EN: "en",
+        DE: "de"
+    };
 
     function copyEmail() {
         navigator.clipboard.writeText("ivan.matjash@gmail.com").then(() => {
@@ -14,8 +24,6 @@
     function toggleLang() {
         lang = lang === "EN" ? "DE" : "EN";
     }
-
-    console.log("hello");
 </script>
 <main
     class="min-h-screen flex flex-col justify-center bg-black text-white font-vt323 relative overflow-y-auto px-4 py-8 sm:py-12 md:py-16"
@@ -26,25 +34,11 @@
     <div class="center-stack">
         <h1 class="text-xl sm:text-2xl md:text-4xl lg:text-5xl font-mono">IVAN MATIASH</h1>
         <p class="text-sm sm:text-base md:text-xl opacity-80">
-            {lang === "EN"
-                ? "student at Informatikmittelschule Basel (2024 - 2028)"
-                : "Schüler an der Informatikmittelschule Basel (2024 - 2028)"}
+            {bio.strings.studentLine[languageKey[lang]]}
         </p>
         <br>
-        <p class="text-sm sm:text-base md:text-lg">{#if lang === "EN"}
-            Hello! I am Ivan, 17 years old, located in Basel. I am an IT student
-            currently interested in low-level programming (C, Rust). So far I
-            have some experience working with Python, PHP, database systems like
-            MySQL and MongoDB and I have some OOP basics down. Outside of the
-            tech realm I play drums in jazz groups. I am also into linguistics,
-            psychology, vim and arthouse cinema.
-            {:else} 
-            Hallo! Ich bin Ivan, 17 Jahre alt und komme aus Basel. Ich bin Informatikstudent und interessiere mich 
-            derzeit für Low-Level-Programmierung (C, Rust). Bisher habe ich bereits Erfahrung mit Python, 
-            PHP und Datenbanksystemen wie MySQL und MongoDB gesammelt und beherrsche die Grundlagen der 
-            objektorientierten Programmierung. Neben der Informatik spiele ich Schlagzeug in Jazzbands. 
-            Ausserdem interessiere ich mich für Linguistik, Psychologie, Vim und Arthouse-Filme.
-            {/if}
+        <p class="text-sm sm:text-base md:text-lg">
+            {bio.strings.bio[languageKey[lang]]}
         </p>
 
         <nav class="mt-6 sm:mt-8 space-y-2 sm:space-y-3 text-xs sm:text-sm md:text-base">

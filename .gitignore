@@ -1,0 +1,18 @@
+# SvelteKit build output
+.svelte-kit/
+build/
+dist/
+
+# Node
+node_modules/
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# macOS
+.DS_Store
+
+# pi agent internal state (not project code)
+.pi/
