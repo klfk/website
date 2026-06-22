@@ -3,6 +3,9 @@
 build/
 dist/
 
+# Vercel build output (Vercel builds this itself on deploy)
+.vercel/output/
+
 # Node
 node_modules/
 
