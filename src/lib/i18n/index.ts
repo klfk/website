@@ -16,7 +16,6 @@ export const translations = {
     theme_to_light: 'Helles Design aktivieren',
     theme_to_dark:  'Dunkles Design aktivieren',
     lang_switch:   'Switch to English',
-    footer: 'Erstellt im Rahmen des IDAF-Projekts «Erfolgversprechende Bewerbung», IMS Basel · 2026 ·',
 
     // ── Home ─────────────────────────────────────────────────────────
     home: {
@@ -252,7 +251,6 @@ export const translations = {
     theme_to_light: 'Switch to light mode',
     theme_to_dark:  'Switch to dark mode',
     lang_switch:   'Auf Deutsch wechseln',
-    footer: 'Created as part of the IDAF project «Successful Job Application», IMS Basel · 2026 ·',
 
     // ── Home ─────────────────────────────────────────────────────────
     home: {

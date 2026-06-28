@@ -159,8 +159,7 @@
   <!-- ── Footer ───────────────────────────────────────────────── -->
   <footer class="school-footer">
     <p>
-      {t.footer}
-      <a href="https://ivanm.xyz">ivanm.xyz</a>
+        <a href="https://ivanm.xyz">ivanm.xyz</a>
     </p>
   </footer>
 
