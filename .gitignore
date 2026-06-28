@@ -22,3 +22,4 @@ node_modules/
 
 # Wrangler generated (created at build time by `wrangler types`)
 worker-configuration.d.ts
+.vercel

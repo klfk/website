@@ -1,25 +1,37 @@
 <script lang="ts">
   import { page } from '$app/state';
-  import { onMount } from 'svelte';
+  import { onMount, setContext } from 'svelte';
   import SchoolSearch from '$lib/components/school/SchoolSearch.svelte';
+  import { translations, type Lang } from '$lib/i18n';
 
   let { children } = $props();
 
   // ── Theme ──────────────────────────────────────────────────────────
-  // Defaults to dark (same as main site). onMount reads localStorage or
-  // prefers-color-scheme and updates — avoids a server/client mismatch.
   let theme = $state<'dark' | 'light'>('dark');
   let searchOpen = $state(false);
 
+  // ── Language ───────────────────────────────────────────────────────
+  let lang = $state<Lang>('de');
+
+  // Expose reactive lang to all child components via context
+  setContext('lang', {
+    get current(): Lang { return lang; },
+  });
+
+  const t = $derived(translations[lang]);
+
   onMount(() => {
-    const saved = localStorage.getItem('school-theme');
-    if (saved === 'dark' || saved === 'light') {
-      theme = saved;
+    // Theme
+    const savedTheme = localStorage.getItem('school-theme');
+    if (savedTheme === 'dark' || savedTheme === 'light') {
+      theme = savedTheme;
     } else {
-      theme = window.matchMedia('(prefers-color-scheme: light)').matches
-        ? 'light'
-        : 'dark';
+      theme = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
     }
+
+    // Language
+    const savedLang = localStorage.getItem('school-lang');
+    if (savedLang === 'de' || savedLang === 'en') lang = savedLang;
 
     // Global keyboard shortcut: ⌘K / Ctrl+K opens search
     function onKey(e: KeyboardEvent) {
@@ -37,15 +49,19 @@
     localStorage.setItem('school-theme', theme);
   }
 
-  const NAV = [
-    { href: '/school', label: 'Home' },
-    { href: '/school/about', label: 'Über mich' },
-    { href: '/school/projects', label: 'Projekte' },
-    { href: '/school/skills', label: 'Kenntnisse' },
-    { href: '/school/documents', label: 'Dokumente' },
-  ] as const;
+  function toggleLang() {
+    lang = lang === 'de' ? 'en' : 'de';
+    localStorage.setItem('school-lang', lang);
+  }
 
-  // Exact match for /school, prefix match for sub-routes
+  const NAV = $derived([
+    { href: '/school',           label: t.nav.home },
+    { href: '/school/about',     label: t.nav.about },
+    { href: '/school/projects',  label: t.nav.projects },
+    { href: '/school/skills',    label: t.nav.skills },
+    { href: '/school/documents', label: t.nav.documents },
+  ]);
+
   function isActive(href: string): boolean {
     if (href === '/school') return page.url.pathname === '/school';
     return page.url.pathname.startsWith(href);
@@ -56,10 +72,10 @@
   <meta name="author" content="Ivan Matiash" />
 </svelte:head>
 
-<div class="school-root" data-school-theme={theme} lang="de">
+<div class="school-root" data-school-theme={theme} lang={lang}>
   <!-- ── Sticky navigation ─────────────────────────────────────── -->
   <header class="school-header">
-    <nav class="school-nav" aria-label="Seitennavigation">
+    <nav class="school-nav" aria-label={t.nav_aria}>
       <ul class="nav-list" role="list">
         {#each NAV as item}
           <li>
@@ -76,11 +92,12 @@
       </ul>
 
       <div class="nav-actions">
+        <!-- Search -->
         <button
           class="icon-btn"
           onclick={() => (searchOpen = true)}
-          aria-label="Suche öffnen (⌘K)"
-          title="Suche (⌘K)"
+          aria-label={t.search_open}
+          title={t.search_title}
         >
           <svg width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true">
             <circle cx="6" cy="6" r="4.5" stroke="currentColor" stroke-width="1.5" />
@@ -88,10 +105,21 @@
           </svg>
         </button>
 
+        <!-- Language toggle -->
+        <button
+          class="lang-btn"
+          onclick={toggleLang}
+          aria-label={t.lang_switch}
+          title={t.lang_switch}
+        >
+          {lang === 'de' ? 'EN' : 'DE'}
+        </button>
+
+        <!-- Theme toggle -->
         <button
           class="icon-btn"
           onclick={toggleTheme}
-          aria-label={theme === 'dark' ? 'Helles Design aktivieren' : 'Dunkles Design aktivieren'}
+          aria-label={theme === 'dark' ? t.theme_to_light : t.theme_to_dark}
           title={theme === 'dark' ? 'Light mode' : 'Dark mode'}
         >
           {#if theme === 'dark'}
@@ -131,8 +159,7 @@
   <!-- ── Footer ───────────────────────────────────────────────── -->
   <footer class="school-footer">
     <p>
-      Erstellt im Rahmen des IDAF-Projekts «Erfolgversprechende Bewerbung»,
-      IMS Basel · 2026 ·
+      {t.footer}
       <a href="https://ivanm.xyz">ivanm.xyz</a>
     </p>
   </footer>
@@ -188,7 +215,6 @@
 
   /* ── Root shell ─────────────────────────────────────────────────── */
 
-  /* Bump rem base when inside the school section (affects all rem-sized text) */
   :global(html:has([data-school-theme])) {
     font-size: 17px;
   }
@@ -197,9 +223,7 @@
     min-height: 100vh;
     background: var(--s-bg);
     color: var(--s-text);
-    /* Override the global VT323 body font for body text in this section */
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial,
-      sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
     font-size: 17px;
     line-height: 1.65;
     -webkit-font-smoothing: antialiased;
@@ -281,6 +305,32 @@
   .icon-btn:hover {
     color: var(--s-text);
     background: var(--s-surface-alt);
+  }
+
+  /* ── Language toggle ─────────────────────────────────────────────── */
+
+  .lang-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 22px;
+    padding: 0 0.45rem;
+    border: 1px solid var(--s-border);
+    background: transparent;
+    color: var(--s-muted);
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.68rem;
+    font-weight: 700;
+    font-family: monospace;
+    letter-spacing: 0.06em;
+    transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+  }
+
+  .lang-btn:hover {
+    color: var(--s-text);
+    background: var(--s-surface-alt);
+    border-color: var(--s-muted);
   }
 
   /* ── Main ───────────────────────────────────────────────────────── */

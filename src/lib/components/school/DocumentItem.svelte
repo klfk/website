@@ -1,31 +1,31 @@
 <script lang="ts">
+  import { translations, type Lang } from '$lib/i18n';
+
   let {
     filename,
     description,
     fileSize,
     available,
     path,
+    lang = 'de',
   }: {
     filename: string;
     description: string;
     fileSize: string;
     available: boolean;
     path: string;
+    lang?: Lang;
   } = $props();
+
+  const t = $derived(translations[lang]);
 </script>
 
 <li class="item">
   <div class="info">
     <div class="name-row">
-      <!-- document icon -->
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" class="doc-icon">
         <rect x="2" y="1" width="8.5" height="12" rx="1" stroke="currentColor" stroke-width="1.4" />
-        <path
-          d="M4 5h4.5M4 7.5h4.5M4 10h2.5"
-          stroke="currentColor"
-          stroke-width="1.2"
-          stroke-linecap="round"
-        />
+        <path d="M4 5h4.5M4 7.5h4.5M4 10h2.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" />
       </svg>
       <span class="filename">{filename}</span>
     </div>
@@ -35,22 +35,21 @@
   <div class="actions">
     <span class="size">{fileSize}</span>
     {#if available}
-      <a href={path} download={filename} class="dl-btn">
+      <a
+        href={path}
+        download={filename}
+        class="dl-btn"
+        aria-label="{t.download} {filename}"
+      >
         <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
-          <path
-            d="M6.5 1.5v7M4 6.5l2.5 2.5 2.5-2.5"
-            stroke="currentColor"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-          <path d="M1.5 11h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+          <path d="M6.5 1v7M3.5 5.5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M1.5 10v1a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
         </svg>
-        Herunterladen
+        {t.download}
       </a>
     {:else}
-      <span class="dl-btn disabled" aria-disabled="true" aria-label="Datei noch nicht verfügbar">
-        in Vorbereitung
+      <span class="dl-btn disabled" aria-disabled="true" aria-label="{t.coming_soon}">
+        {t.coming_soon}
       </span>
     {/if}
   </div>
@@ -83,10 +82,7 @@
     gap: 0.4rem;
   }
 
-  .doc-icon {
-    color: var(--s-muted);
-    flex-shrink: 0;
-  }
+  .doc-icon { color: var(--s-muted); flex-shrink: 0; }
 
   .filename {
     font-family: monospace;
@@ -97,12 +93,7 @@
     text-overflow: ellipsis;
   }
 
-  .desc {
-    margin: 0;
-    font-size: 0.8rem;
-    color: var(--s-muted);
-    padding-left: 1.4rem;
-  }
+  .desc { margin: 0; font-size: 0.8rem; color: var(--s-muted); padding-left: 1.4rem; }
 
   .actions {
     display: flex;
@@ -111,11 +102,7 @@
     flex-shrink: 0;
   }
 
-  .size {
-    font-size: 0.72rem;
-    color: var(--s-muted);
-    font-family: monospace;
-  }
+  .size { font-size: 0.72rem; color: var(--s-muted); font-family: monospace; }
 
   .dl-btn {
     display: inline-flex;
@@ -146,12 +133,7 @@
   }
 
   @media (max-width: 560px) {
-    .item {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-    .actions {
-      align-self: flex-end;
-    }
+    .item { flex-direction: column; align-items: flex-start; }
+    .actions { align-self: flex-end; }
   }
 </style>

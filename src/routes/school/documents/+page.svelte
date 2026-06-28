@@ -1,79 +1,31 @@
 <script lang="ts">
+  import { getContext } from 'svelte';
   import { enhance } from '$app/forms';
+  import { translations, type Lang } from '$lib/i18n';
   import DocumentItem from '$lib/components/school/DocumentItem.svelte';
 
   let { data, form } = $props();
 
-  /**
-   * Document list.
-   * - Set available: true once the real file is in static/school/documents/.
-   * - Set available: false to show a greyed-out "in Vorbereitung" button.
-   * - fileSize is displayed as-is; update it if you replace a file.
-   */
-  const docs = [
-    {
-      filename:    'Bewerbungsschreiben_Ivan_Matiash.pdf',
-      description: 'Bewerbungsschreiben an Sympany',
-      fileSize:    '55 KB',
-      available:   true,
-      path:        '/school/documents/Bewerbungsschreiben_Ivan_Matiash.pdf',
-    },
-    {
-      filename:    'Lebenslauf_Ivan_Matiash.pdf',
-      description: 'Tabellarischer Lebenslauf',
-      fileSize:    '335 KB',
-      available:   true,
-      path:        '/school/documents/Lebenslauf_Ivan_Matiash.pdf',
-    },
-    {
-      filename:    'Schulbestaetigung_IMS_Ivan_Matiash.pdf',
-      description: 'Schulbestätigung IMS Basel (2025/26, Semester 2)',
-      fileSize:    '59 KB',
-      available:   true,
-      path:        '/school/documents/Schulbestaetigung_IMS_Ivan_Matiash.pdf',
-    },
-    {
-      filename:    'Modulnotenuebersicht_IMS_Ivan_Matiash.pdf',
-      description: 'Notenübersicht der IMS-Module',
-      fileSize:    '65 KB',
-      available:   true,
-      path:        '/school/documents/Modulnotenuebersicht_IMS_Ivan_Matiash.pdf',
-    },
-    {
-      filename:    'Zeugnis_IMS_Semester1.pdf',
-      description: 'IMS Semesterzeugnis 1 (2024/25)',
-      fileSize:    '73 KB',
-      available:   true,
-      path:        '/school/documents/Zeugnis_IMS_Semester1.pdf',
-    },
-    {
-      filename:    'Zeugnis_IMS_Semester2.pdf',
-      description: 'IMS Semesterzeugnis 2 (2024/25)',
-      fileSize:    '~73 KB',
-      available:   false,   // [TODO: Ivan — upload when available]
-      path:        '/school/documents/Zeugnis_IMS_Semester2.pdf',
-    },
-    {
-      filename:    'Zeugnis_IMS_Semester3.pdf',
-      description: 'IMS Semesterzeugnis 3 (2025/26)',
-      fileSize:    '73 KB',
-      available:   true,
-      path:        '/school/documents/Zeugnis_IMS_Semester3.pdf',
-    },
-    {
-      filename:    'Goethe_B1_Zertifikat.pdf',
-      description: 'Goethe-Zertifikat Deutsch B1 (2023)',
-      fileSize:    '~200 KB',
-      available:   false,   // [TODO: Ivan — upload scan of the certificate]
-      path:        '/school/documents/Goethe_B1_Zertifikat.pdf',
-    },
+  const langCtx = getContext<{ current: Lang }>('lang');
+  const t = $derived(translations[langCtx.current].documents);
+  const tRoot = $derived(translations[langCtx.current]);
+
+  const docMeta = [
+    { filename: 'Bewerbungsschreiben_Ivan_Matiash.pdf', fileSize: '55 KB',   available: true,  path: '/school/documents/Bewerbungsschreiben_Ivan_Matiash.pdf' },
+    { filename: 'Lebenslauf_Ivan_Matiash.pdf',          fileSize: '335 KB',  available: true,  path: '/school/documents/Lebenslauf_Ivan_Matiash.pdf' },
+    { filename: 'Schulbestaetigung_IMS_Ivan_Matiash.pdf', fileSize: '59 KB', available: true,  path: '/school/documents/Schulbestaetigung_IMS_Ivan_Matiash.pdf' },
+    { filename: 'Modulnotenuebersicht_IMS_Ivan_Matiash.pdf', fileSize: '65 KB', available: true, path: '/school/documents/Modulnotenuebersicht_IMS_Ivan_Matiash.pdf' },
+    { filename: 'Zeugnis_IMS_Semester1.pdf',            fileSize: '73 KB',   available: true,  path: '/school/documents/Zeugnis_IMS_Semester1.pdf' },
+    { filename: 'Zeugnis_IMS_Semester2.pdf',            fileSize: '~73 KB',  available: false, path: '/school/documents/Zeugnis_IMS_Semester2.pdf' },
+    { filename: 'Zeugnis_IMS_Semester3.pdf',            fileSize: '73 KB',   available: true,  path: '/school/documents/Zeugnis_IMS_Semester3.pdf' },
+    { filename: 'Goethe_B1_Zertifikat.pdf',             fileSize: '~200 KB', available: false, path: '/school/documents/Goethe_B1_Zertifikat.pdf' },
   ];
 </script>
 
 <svelte:head>
-  <title>Dokumente — Ivan Matiash</title>
+  <title>{t.meta_title}</title>
   <meta name="robots" content="noindex, nofollow" />
-  <meta name="description" content="Bewerbungsunterlagen von Ivan Matiash (geschützter Bereich)." />
+  <meta name="description" content={t.meta_desc} />
 </svelte:head>
 
 {#if !data.authenticated}
@@ -86,11 +38,8 @@
           <path d="M7 10V7a4 4 0 0 1 8 0v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
         </svg>
       </div>
-      <h1>Geschützter Bereich</h1>
-      <p class="gate-desc">
-        Dieses Dokument ist nur für autorisierte Personen zugänglich.
-        Bitte PIN eingeben, um fortzufahren.
-      </p>
+      <h1>{t.gate_heading}</h1>
+      <p class="gate-desc">{t.gate_desc}</p>
 
       <form method="POST" action="?/login" use:enhance class="pin-form">
         <label for="pin" class="sr-only">PIN</label>
@@ -101,7 +50,7 @@
           type="password"
           inputmode="numeric"
           autocomplete="current-password"
-          placeholder="PIN eingeben"
+          placeholder={t.pin_placeholder}
           class="pin-input"
           class:error={!!form?.error}
           autofocus
@@ -110,7 +59,7 @@
         {#if form?.error}
           <p class="error-msg" role="alert">{form.error}</p>
         {/if}
-        <button type="submit" class="pin-btn">Bestätigen</button>
+        <button type="submit" class="pin-btn">{t.confirm}</button>
       </form>
     </div>
   </div>
@@ -119,14 +68,14 @@
   <!-- ── Document list (authenticated) ──────────────────────────── -->
   <header class="page-head">
     <div class="head-row">
-      <h1>Dokumente</h1>
+      <h1>{t.heading}</h1>
       <form method="POST" action="?/logout" use:enhance>
-        <button type="submit" class="logout-btn" aria-label="Abmelden">
+        <button type="submit" class="logout-btn" aria-label={t.logout}>
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
             <path d="M5 2H3a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
             <path d="M9 10l3-3-3-3M12 7H5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
-          Abmelden
+          {t.logout}
         </button>
       </form>
     </div>
@@ -138,25 +87,24 @@
       <line x1="7.5" y1="6.5" x2="7.5" y2="11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
       <circle cx="7.5" cy="4.5" r="0.75" fill="currentColor"/>
     </svg>
-    Dieser Bereich enthält meine persönlichen Bewerbungsunterlagen.
-    Bitte behandeln Sie die Dokumente vertraulich.
+    {t.notice}
   </div>
 
-  <ul class="doc-list" aria-label="Bewerbungsunterlagen">
-    {#each docs as doc}
+  <ul class="doc-list" aria-label={t.heading}>
+    {#each docMeta as doc, i}
       <DocumentItem
         filename={doc.filename}
-        description={doc.description}
+        description={t.docs[i].description}
         fileSize={doc.fileSize}
         available={doc.available}
         path={doc.path}
+        lang={langCtx.current}
       />
     {/each}
   </ul>
 {/if}
 
 <style>
-  /* ── Login gate ──────────────────────────────────────────────────── */
   .gate-wrap {
     display: flex;
     align-items: center;
@@ -177,10 +125,7 @@
     text-align: center;
   }
 
-  .gate-icon {
-    color: var(--s-muted);
-    margin-bottom: 0.25rem;
-  }
+  .gate-icon { color: var(--s-muted); margin-bottom: 0.25rem; }
 
   .gate h1 {
     font-family: 'VT323', monospace;
@@ -223,20 +168,10 @@
     transition: border-color 0.15s;
   }
 
-  .pin-input:focus {
-    border-color: var(--s-text);
-  }
+  .pin-input:focus { border-color: var(--s-text); }
+  .pin-input.error { border-color: #e05252; }
 
-  .pin-input.error {
-    border-color: #e05252;
-  }
-
-  .error-msg {
-    font-size: 0.8rem;
-    color: #e05252;
-    margin: 0;
-    text-align: center;
-  }
+  .error-msg { font-size: 0.8rem; color: #e05252; margin: 0; text-align: center; }
 
   .pin-btn {
     width: 100%;
@@ -253,27 +188,19 @@
     margin-top: 0.25rem;
   }
 
-  .pin-btn:hover {
-    opacity: 0.82;
-  }
+  .pin-btn:hover { opacity: 0.82; }
 
-  /* Screen-reader-only utility */
   .sr-only {
     position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
+    width: 1px; height: 1px;
+    padding: 0; margin: -1px;
     overflow: hidden;
     clip: rect(0, 0, 0, 0);
     white-space: nowrap;
     border-width: 0;
   }
 
-  /* ── Authenticated view ──────────────────────────────────────────── */
-  .page-head {
-    margin-bottom: 1.5rem;
-  }
+  .page-head { margin-bottom: 1.5rem; }
 
   .head-row {
     display: flex;
@@ -307,10 +234,7 @@
     transition: color 0.15s, border-color 0.15s;
   }
 
-  .logout-btn:hover {
-    color: var(--s-text);
-    border-color: var(--s-muted);
-  }
+  .logout-btn:hover { color: var(--s-text); border-color: var(--s-muted); }
 
   .notice {
     display: flex;
@@ -326,9 +250,7 @@
     line-height: 1.5;
   }
 
-  .notice svg {
-    flex-shrink: 0;
-  }
+  .notice svg { flex-shrink: 0; }
 
   .doc-list {
     list-style: none;

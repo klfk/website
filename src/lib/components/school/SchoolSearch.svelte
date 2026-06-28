@@ -1,58 +1,20 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { onMount, getContext } from 'svelte';
+  import { translations, type Lang } from '$lib/i18n';
 
   let { onclose }: { onclose: () => void } = $props();
+
+  const langCtx = getContext<{ current: Lang }>('lang');
 
   let query = $state('');
   let inputEl: HTMLInputElement;
 
-  // Static search index — covers all pages, projects, skills, and CV facts.
-  // Extend this array whenever content changes.
-  const INDEX = [
-    // ── Pages ────────────────────────────────────────────────────────
-    { type: 'Seite', title: 'Home', desc: 'Kurzprofil und Überblick', href: '/school' },
-    { type: 'Seite', title: 'Über mich', desc: 'Vollständiger Lebenslauf', href: '/school/about' },
-    { type: 'Seite', title: 'Projekte', desc: 'Schul- und Privatprojekte', href: '/school/projects' },
-    { type: 'Seite', title: 'Kenntnisse', desc: 'ICT-Kompetenzübersicht', href: '/school/skills' },
-    { type: 'Seite', title: 'Dokumente', desc: 'Bewerbungsunterlagen (geschützt)', href: '/school/documents' },
-
-    // ── Projects ─────────────────────────────────────────────────────
-    { type: 'Projekt', title: 'Librebooks', desc: 'CRUD-Webapplikation für eine Bibliothek. PHP, MySQL, JavaScript.', href: '/school/projects' },
-    { type: 'Projekt', title: 'ivanm.xyz', desc: 'Persönliche Webseite mit Svelte und Cloudflare Pages.', href: '/school/projects' },
-    { type: 'Projekt', title: 'Typing-Tester (CLI)', desc: 'Kleines Tool im Terminal zur Messung der Tippgeschwindigkeit. Python.', href: '/school/projects' },
-    { type: 'Projekt', title: 'Dotfiles & Neovim', desc: 'Persönliche Editor-Umgebung, Lua und Shell-Skripte.', href: '/school/projects' },
-
-    // ── Skills ───────────────────────────────────────────────────────
-    { type: 'Kenntnisse', title: 'HTML / CSS', desc: '4/5 — Programmiersprachen', href: '/school/skills' },
-    { type: 'Kenntnisse', title: 'JavaScript', desc: '3/5 — Programmiersprachen', href: '/school/skills' },
-    { type: 'Kenntnisse', title: 'PHP', desc: '3/5 — Programmiersprachen', href: '/school/skills' },
-    { type: 'Kenntnisse', title: 'Python', desc: '3/5 — Programmiersprachen', href: '/school/skills' },
-    { type: 'Kenntnisse', title: 'Java (OOP)', desc: '3/5 — Programmiersprachen', href: '/school/skills' },
-    { type: 'Kenntnisse', title: 'SQL', desc: '3/5 — Programmiersprachen', href: '/school/skills' },
-    { type: 'Kenntnisse', title: 'C', desc: '2/5 — Programmiersprachen', href: '/school/skills' },
-    { type: 'Kenntnisse', title: 'Rust', desc: '2/5 — Programmiersprachen', href: '/school/skills' },
-    { type: 'Kenntnisse', title: 'Lua', desc: '2/5 — Programmiersprachen', href: '/school/skills' },
-    { type: 'Kenntnisse', title: 'Git / GitHub', desc: '4/5 — Tools & DevOps', href: '/school/skills' },
-    { type: 'Kenntnisse', title: 'Neovim', desc: '4/5 — Editoren / Workflow', href: '/school/skills' },
-    { type: 'Kenntnisse', title: 'Svelte / SvelteKit', desc: '3/5 — Frameworks', href: '/school/skills' },
-    { type: 'Kenntnisse', title: 'Docker', desc: '2/5 — Tools & DevOps', href: '/school/skills' },
-    { type: 'Kenntnisse', title: 'MySQL', desc: '3/5 — Datenbanken', href: '/school/skills' },
-    { type: 'Kenntnisse', title: 'Typst', desc: '4/5 — Tools & DevOps', href: '/school/skills' },
-    { type: 'Kenntnisse', title: 'macOS', desc: '4/5 — Betriebssysteme', href: '/school/skills' },
-    { type: 'Kenntnisse', title: 'Linux', desc: '3/5 — Betriebssysteme', href: '/school/skills' },
-
-    // ── CV facts ─────────────────────────────────────────────────────
-    { type: 'CV', title: 'IMS Basel', desc: 'Informatikmittelschule, Klasse I-2a, 2024–2028', href: '/school/about' },
-    { type: 'CV', title: 'Schnupperlehre Adobe', desc: 'Frontend, Python, Design — 2024', href: '/school/about' },
-    { type: 'CV', title: 'Bauernhof St. Gallen', desc: 'Ferienjob Sommer 2025 — Alpwirtschaft', href: '/school/about' },
-    { type: 'CV', title: 'Sprachen', desc: 'Ukrainisch, Russisch, Englisch C1, Deutsch B1, Französisch B2', href: '/school/about' },
-    { type: 'CV', title: 'Freizeit', desc: 'Schlagzeug, Krafttraining, Lesen, Kino, Coding', href: '/school/about' },
-  ] as const;
+  const t = $derived(translations[langCtx.current].search);
 
   const results = $derived(
     query.trim().length < 2
-      ? ([] as typeof INDEX[number][])
-      : INDEX.filter((item) => {
+      ? []
+      : t.index.filter((item) => {
           const q = query.toLowerCase();
           return (
             item.title.toLowerCase().includes(q) ||
@@ -80,7 +42,7 @@
   class="backdrop"
   role="dialog"
   aria-modal="true"
-  aria-label="Suche"
+  aria-label={t.aria}
   tabindex="-1"
   onclick={handleBackdrop}
   onkeydown={handleKeydown}
@@ -96,21 +58,21 @@
         bind:value={query}
         type="search"
         class="search-input"
-        placeholder="Suchen…"
+        placeholder={t.placeholder}
         autocomplete="off"
         spellcheck="false"
-        aria-label="Suchbegriff eingeben"
+        aria-label={t.input_aria}
       />
-      <button class="esc-btn" onclick={onclose} aria-label="Suche schliessen">Esc</button>
+      <button class="esc-btn" onclick={onclose} aria-label={t.close_aria}>Esc</button>
     </div>
 
     <div class="results-area">
       {#if query.trim().length < 2}
-        <p class="hint">Mindestens 2 Zeichen eingeben.</p>
+        <p class="hint">{t.hint}</p>
       {:else if results.length === 0}
-        <p class="hint">Keine Ergebnisse für „{query}".</p>
+        <p class="hint">{t.no_results} „{query}".</p>
       {:else}
-        <ul class="result-list" role="listbox" aria-label="Suchergebnisse">
+        <ul class="result-list" role="listbox" aria-label={t.aria}>
           {#each results as item}
             <li role="option" aria-selected="false">
               <a href={item.href} class="result" onclick={onclose}>
@@ -159,10 +121,7 @@
     border-bottom: 1px solid var(--s-border);
   }
 
-  .search-icon {
-    color: var(--s-muted);
-    flex-shrink: 0;
-  }
+  .search-icon { color: var(--s-muted); flex-shrink: 0; }
 
   .search-input {
     flex: 1;
@@ -176,9 +135,7 @@
     appearance: none;
   }
 
-  .search-input::placeholder {
-    color: var(--s-muted);
-  }
+  .search-input::placeholder { color: var(--s-muted); }
 
   .esc-btn {
     background: var(--s-surface-alt);
@@ -193,10 +150,7 @@
     flex-shrink: 0;
   }
 
-  .results-area {
-    max-height: 380px;
-    overflow-y: auto;
-  }
+  .results-area { max-height: 380px; overflow-y: auto; }
 
   .hint {
     padding: 1.25rem 1rem;
@@ -206,19 +160,9 @@
     margin: 0;
   }
 
-  .result-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-
-  .result-list li {
-    border-bottom: 1px solid var(--s-border);
-  }
-
-  .result-list li:last-child {
-    border-bottom: none;
-  }
+  .result-list { list-style: none; margin: 0; padding: 0; }
+  .result-list li { border-bottom: 1px solid var(--s-border); }
+  .result-list li:last-child { border-bottom: none; }
 
   .result {
     display: grid;
@@ -231,9 +175,7 @@
     align-items: center;
   }
 
-  .result:hover {
-    background: var(--s-surface-alt);
-  }
+  .result:hover { background: var(--s-surface-alt); }
 
   .result-type {
     font-size: 0.66rem;
@@ -248,12 +190,7 @@
     align-self: center;
   }
 
-  .result-body {
-    display: flex;
-    flex-direction: column;
-    gap: 0.1rem;
-    min-width: 0;
-  }
+  .result-body { display: flex; flex-direction: column; gap: 0.1rem; min-width: 0; }
 
   .result-title {
     font-size: 0.875rem;

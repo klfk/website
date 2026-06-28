@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { translations, type Lang } from '$lib/i18n';
+
   let {
     title,
     description,
@@ -6,6 +8,7 @@
     learned,
     link = null,
     linkLabel = null,
+    lang = 'de',
   }: {
     title: string;
     description: string;
@@ -13,12 +16,14 @@
     learned: string;
     link?: string | null;
     linkLabel?: string | null;
+    lang?: Lang;
   } = $props();
 
-  // $derived keeps href in sync if the parent ever passes a new link value
   const href = $derived(
     link == null ? null : link.startsWith('http') ? link : `https://${link}`
   );
+
+  const t = $derived(translations[lang]);
 </script>
 
 <article class="card">
@@ -30,27 +35,16 @@
         target="_blank"
         rel="noopener noreferrer"
         class="card-link"
-        aria-label="Projekt {title} öffnen"
+        aria-label="Open {title}"
       >
         <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-          <path
-            d="M5 2H2a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V7"
-            stroke="currentColor"
-            stroke-width="1.5"
-            stroke-linecap="round"
-          />
-          <path
-            d="M8 1h3m0 0v3m0-3L5.5 6.5"
-            stroke="currentColor"
-            stroke-width="1.5"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
+          <path d="M5 2H2a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h7a1 1 0 0 0 1-1V7" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" />
+          <path d="M8 1h3m0 0v3m0-3L5.5 6.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
         {linkLabel ?? link}
       </a>
     {:else}
-      <span class="no-link">kein öffentlicher Link</span>
+      <span class="no-link">{t.no_link}</span>
     {/if}
   </header>
 
@@ -63,7 +57,7 @@
   </div>
 
   <div class="learned-row">
-    <span class="learned-label">Gelernt:</span>
+    <span class="learned-label">{t.learned}</span>
     <span class="learned-text">{learned}</span>
   </div>
 </article>
@@ -108,30 +102,13 @@
     flex-shrink: 0;
   }
 
-  .card-link:hover {
-    color: var(--s-link-hover);
-    text-decoration: underline;
-  }
+  .card-link:hover { color: var(--s-link-hover); text-decoration: underline; }
 
-  .no-link {
-    font-size: 0.75rem;
-    color: var(--s-muted);
-    flex-shrink: 0;
-  }
+  .no-link { font-size: 0.75rem; color: var(--s-muted); flex-shrink: 0; }
 
-  .desc {
-    margin: 0;
-    font-size: 0.875rem;
-    line-height: 1.65;
-    color: var(--s-text);
-    flex: 1;
-  }
+  .desc { margin: 0; font-size: 0.875rem; line-height: 1.65; color: var(--s-text); flex: 1; }
 
-  .tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.35rem;
-  }
+  .tags { display: flex; flex-wrap: wrap; gap: 0.35rem; }
 
   .tag {
     font-size: 0.72rem;
@@ -151,13 +128,6 @@
     color: var(--s-muted);
   }
 
-  .learned-label {
-    font-weight: 600;
-    margin-right: 0.3rem;
-  }
-
-  .learned-text {
-    color: var(--s-text);
-    opacity: 0.82;
-  }
+  .learned-label { font-weight: 600; margin-right: 0.3rem; }
+  .learned-text { color: var(--s-text); opacity: 0.82; }
 </style>

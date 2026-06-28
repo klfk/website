@@ -1,123 +1,93 @@
 <script lang="ts">
+  import { getContext } from 'svelte';
+  import { translations, type Lang } from '$lib/i18n';
   import SkillBar from '$lib/components/school/SkillBar.svelte';
 
-  type SkillGroup = {
-    label: string;
-    skills: { name: string; level: number }[];
-  };
+  const langCtx = getContext<{ current: Lang }>('lang');
+  const t = $derived(translations[langCtx.current].skills);
 
-  const groups: SkillGroup[] = [
-    {
-      label: 'Programmiersprachen',
-      skills: [
-        { name: 'HTML / CSS',   level: 4 },
-        { name: 'JavaScript',   level: 3 },
-        { name: 'PHP',          level: 3 },
-        { name: 'Python',       level: 3 },
-        { name: 'Java (OOP)',   level: 3 },
-        { name: 'SQL',          level: 3 },
-        { name: 'C',            level: 2 },
-        { name: 'Rust',         level: 2 },
-        { name: 'Lua',          level: 2 },
-      ],
-    },
-    {
-      label: 'Datenbanken',
-      skills: [
-        { name: 'MySQL',              level: 3 },
-        { name: 'NoSQL (Mongo o. ä.)', level: 2 },
-      ],
-    },
-    {
-      label: 'Frameworks / Libraries',
-      skills: [
-        { name: 'Svelte / SvelteKit', level: 3 },
-      ],
-    },
-    {
-      label: 'Tools & DevOps',
-      skills: [
-        { name: 'Git / GitHub',                    level: 4 },
-        { name: 'Docker / Container',              level: 2 },
-        { name: 'Cloud-Grundlagen (Cloudflare)',   level: 3 },
-        { name: 'Typst',                           level: 4 },
-      ],
-    },
-    {
-      label: 'Betriebssysteme',
-      skills: [
-        { name: 'macOS',            level: 4 },
-        { name: 'Linux (Server, VMs)', level: 3 },
-        { name: 'Windows',          level: 2 },
-      ],
-    },
-    {
-      label: 'Editoren / Workflow',
-      skills: [
-        { name: 'Neovim (eigene Konfiguration)', level: 4 },
-        { name: 'VS Code',                       level: 3 },
-        { name: 'Ghostty / Terminal-Setup',      level: 4 },
-        { name: 'AeroSpace WM',                  level: 3 },
-      ],
-    },
-    {
-      label: 'Sozial / Methodik',
-      skills: [
-        { name: 'Selbständiges Lernen',              level: 4 },
-        { name: 'Kommunikation in Gruppen',          level: 3 },
-        { name: 'Strukturierte Planung',             level: 4 },
-        { name: 'Problemlösung / analytisches Denken', level: 4 },
-      ],
-    },
-  ];
-
-  const legend: [number, string][] = [
-    [1, 'Grundkenntnisse, keine praktische Erfahrung'],
-    [2, 'Kenntnisse vorhanden, wenig praktische Erfahrung'],
-    [3, 'Gute Kenntnisse, regelmässige praktische Erfahrung'],
-    [4, 'Sehr gute Kenntnisse, viel praktische Erfahrung'],
-    [5, 'Experte, umfangreiche praktische Erfahrung'],
+  // Skills data — labels are language-agnostic (tech names), groups come from translations
+  const skillData = [
+    [
+      { name: 'HTML / CSS',   level: 4 },
+      { name: 'JavaScript',   level: 3 },
+      { name: 'PHP',          level: 3 },
+      { name: 'Python',       level: 3 },
+      { name: 'Java (OOP)',   level: 3 },
+      { name: 'SQL',          level: 3 },
+      { name: 'C',            level: 2 },
+      { name: 'Rust',         level: 2 },
+      { name: 'Lua',          level: 2 },
+    ],
+    [
+      { name: 'MySQL',               level: 3 },
+      { name: 'NoSQL (Mongo o. ä.)', level: 2 },
+    ],
+    [
+      { name: 'Svelte / SvelteKit', level: 3 },
+    ],
+    [
+      { name: 'Git / GitHub',                  level: 4 },
+      { name: 'Docker / Container',            level: 2 },
+      { name: 'Cloud-Grundlagen (Cloudflare)', level: 3 },
+      { name: 'Typst',                         level: 4 },
+    ],
+    [
+      { name: 'macOS',               level: 4 },
+      { name: 'Linux (Server, VMs)', level: 3 },
+      { name: 'Windows',             level: 2 },
+    ],
+    [
+      { name: 'Neovim (eigene Konfiguration)', level: 4 },
+      { name: 'VS Code',                       level: 3 },
+      { name: 'Ghostty / Terminal-Setup',      level: 4 },
+      { name: 'AeroSpace WM',                  level: 3 },
+    ],
+    [
+      { name: 'Selbständiges Lernen',                level: 4 },
+      { name: 'Kommunikation in Gruppen',            level: 3 },
+      { name: 'Strukturierte Planung',               level: 4 },
+      { name: 'Problemlösung / analytisches Denken', level: 4 },
+    ],
   ];
 </script>
 
 <svelte:head>
-  <title>Kenntnisse — Ivan Matiash</title>
-  <meta
-    name="description"
-    content="ICT-Kompetenzübersicht von Ivan Matiash nach IDAF-Skala 1–5: Programmiersprachen, Datenbanken, Tools, Betriebssysteme."
-  />
-  <meta property="og:title" content="Kenntnisse — Ivan Matiash" />
+  <title>{t.meta_title}</title>
+  <meta name="description" content={t.meta_desc} />
+  <meta property="og:title" content={t.og_title} />
   <meta property="og:type"  content="website" />
 </svelte:head>
 
 <header class="page-head">
-  <h1>Kenntnisse</h1>
-  <p class="lead">Informatikkompetenz-Übersicht nach IDAF-Skala (1–5).</p>
+  <h1>{t.heading}</h1>
+  <p class="lead">{t.lead}</p>
 </header>
 
 <div class="groups">
-  {#each groups as group}
+  {#each t.groups as group, i}
     <section
       class="group"
-      aria-labelledby="g-{group.label.replace(/[\s\/&]+/g, '-').toLowerCase()}"
+      aria-labelledby="g-{group.label.replace(/[^a-z0-9]/gi, '-')}"
     >
-      <h2 id="g-{group.label.replace(/[\s\/&]+/g, '-').toLowerCase()}" class="group-label">
-        {group.label}
-      </h2>
-      <div class="skill-list">
-        {#each group.skills as skill}
+      <h2
+        class="group-label"
+        id="g-{group.label.replace(/[^a-z0-9]/gi, '-')}"
+      >{group.label}</h2>
+      <ul class="skill-list">
+        {#each skillData[i] as skill}
           <SkillBar name={skill.name} level={skill.level} />
         {/each}
-      </div>
+      </ul>
     </section>
   {/each}
 </div>
 
 <!-- ── Legend ─────────────────────────────────────────────────────── -->
-<aside class="legend" aria-label="Bewertungsskala">
-  <h2 class="legend-heading">Legende</h2>
+<aside class="legend" aria-label={t.legend}>
+  <h2 class="legend-heading">{t.legend}</h2>
   <dl class="legend-list">
-    {#each legend as [lvl, desc]}
+    {#each t.legend_items as [lvl, desc]}
       <div class="legend-row">
         <dt class="legend-lvl">{lvl}/5</dt>
         <dd class="legend-desc">{desc}</dd>
@@ -127,9 +97,7 @@
 </aside>
 
 <style>
-  .page-head {
-    margin-bottom: 2rem;
-  }
+  .page-head { margin-bottom: 2rem; }
 
   h1 {
     font-family: 'VT323', monospace;
@@ -140,13 +108,8 @@
     color: var(--s-text);
   }
 
-  .lead {
-    color: var(--s-muted);
-    font-size: 0.875rem;
-    margin: 0;
-  }
+  .lead { color: var(--s-muted); font-size: 0.875rem; margin: 0; }
 
-  /* ── Skill groups ────────────────────────────────────────────────── */
   .groups {
     display: flex;
     flex-direction: column;
@@ -173,12 +136,8 @@
     border-bottom: 1px solid var(--s-border);
   }
 
-  .skill-list {
-    display: flex;
-    flex-direction: column;
-  }
+  .skill-list { display: flex; flex-direction: column; }
 
-  /* ── Legend ──────────────────────────────────────────────────────── */
   .legend {
     border-top: 1px solid var(--s-border);
     padding-top: 1.5rem;
@@ -212,9 +171,7 @@
     align-items: baseline;
   }
 
-  .legend-row:last-child {
-    border-bottom: none;
-  }
+  .legend-row:last-child { border-bottom: none; }
 
   .legend-lvl {
     font-family: 'VT323', monospace;
@@ -223,9 +180,5 @@
     font-weight: 600;
   }
 
-  .legend-desc {
-    color: var(--s-muted);
-    margin: 0;
-    line-height: 1.45;
-  }
+  .legend-desc { color: var(--s-muted); margin: 0; line-height: 1.45; }
 </style>
