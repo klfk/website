@@ -1,0 +1,25 @@
+# SvelteKit build output
+.svelte-kit/
+build/
+dist/
+
+# Vercel build output (Vercel builds this itself on deploy)
+.vercel/output/
+
+# Node
+node_modules/
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# macOS
+.DS_Store
+
+# pi agent internal state (not project code)
+.pi/
+
+# Wrangler generated (created at build time by `wrangler types`)
+worker-configuration.d.ts
+.vercel
