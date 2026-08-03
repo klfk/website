@@ -44,6 +44,18 @@ collections:
                   - label: German
                     name: de
                     widget: string
+                  - label: Français
+                    name: fr
+                    widget: string
+                  - label: 粵語
+                    name: yue
+                    widget: string
+                  - label: हिन्दी
+                    name: hi
+                    widget: string
+                  - label: Binary
+                    name: binary
+                    widget: string
                   - label: Source hash
                     name: sourceHash
                     widget: hidden
@@ -58,6 +70,22 @@ collections:
                     buttons: [bold, italic, link]
                   - label: German
                     name: de
+                    widget: text
+                    buttons: [bold, italic, link]
+                  - label: Français
+                    name: fr
+                    widget: text
+                    buttons: [bold, italic, link]
+                  - label: 粵語
+                    name: yue
+                    widget: text
+                    buttons: [bold, italic, link]
+                  - label: हिन्दी
+                    name: hi
+                    widget: text
+                    buttons: [bold, italic, link]
+                  - label: Binary
+                    name: binary
                     widget: text
                     buttons: [bold, italic, link]
                   - label: Source hash
