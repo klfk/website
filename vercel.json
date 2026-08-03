@@ -1,6 +1,19 @@
 {
   "rewrites": [
-    { "source": "/game/:path*", "destination": "https://chernobylgame.vercel.app/:path*" },
-    { "source": "/game", "destination": "https://chernobylgame.vercel.app" }
+    {
+      "source": "/game/:path*",
+      "destination": "https://chernobylgame.vercel.app/:path*"
+    },
+    {
+      "source": "/game",
+      "destination": "https://chernobylgame.vercel.app"
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/admin",
+      "destination": "/admin/",
+      "permanent": false
+    }
   ]
 }
