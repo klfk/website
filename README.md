@@ -9,4 +9,4 @@ The site includes a lightweight Decap CMS admin UI at `/admin/`.
 - Local CMS mode is enabled with `local_backend: true`.
 
 To edit content locally, run the site and a Decap local backend, then open `/admin`.
-For production GitHub edits, Decap uses the `klfk/website` repository on the `main` branch via the `/api/cms` GitHub OAuth proxy. Configure a GitHub OAuth App with callback URL `https://ivanm.xyz/api/cms/callback?provider=github`, then set `GITHUB_OAUTH_ID` and `GITHUB_OAUTH_SECRET` in Vercel.
+For production GitHub edits, Decap uses the `klfk/website` repository on the `main` branch via the GitHub OAuth proxy at `/api/cms`. Configure a GitHub OAuth App with callback URL `https://ivanm.xyz/api/cms/callback?provider=github`, then set `GITHUB_OAUTH_ID` and `GITHUB_OAUTH_SECRET` in Vercel.
