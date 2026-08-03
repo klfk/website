@@ -9,15 +9,28 @@ function callbackHtml(status: 'success' | 'error', token = '') {
     <meta charset="utf-8" />
     <title>Authorizing Decap</title>
     <script>
-      const receiveMessage = () => {
-        window.opener.postMessage(
-          'authorization:github:${status}:' + JSON.stringify({ token: ${JSON.stringify(token)} }),
-          '*'
-        );
-        window.removeEventListener('message', receiveMessage, false);
-      };
-      window.addEventListener('message', receiveMessage, false);
-      window.opener.postMessage('authorizing:github', '*');
+      const message = 'authorization:github:${status}:' + JSON.stringify({ token: ${JSON.stringify(token)} });
+      let attempts = 0;
+
+      function sendAuthorization() {
+        attempts += 1;
+        if (!window.opener) {
+          document.body.textContent = 'Could not find the CMS window. Close this tab and try logging in again.';
+          return;
+        }
+
+        window.opener.postMessage('authorizing:github', '*');
+        window.opener.postMessage(message, '*');
+
+        if (attempts < 20) {
+          window.setTimeout(sendAuthorization, 250);
+        } else {
+          window.close();
+          document.body.textContent = 'Authorization sent. You can close this window.';
+        }
+      }
+
+      window.addEventListener('load', sendAuthorization);
     </script>
   </head>
   <body><p>Authorizing Decap...</p></body>
