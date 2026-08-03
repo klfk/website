@@ -2,6 +2,8 @@ backend:
   name: github
   repo: klfk/website
   branch: main
+  base_url: https://ivanm.xyz/api/cms
+  auth_endpoint: auth
 
 local_backend: true
 publish_mode: simple
