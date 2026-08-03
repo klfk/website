@@ -1,0 +1,64 @@
+backend:
+  name: github
+  repo: klfk/website
+  branch: main
+
+local_backend: true
+publish_mode: simple
+
+media_folder: static/uploads
+public_folder: /uploads
+
+collections:
+  - name: portfolio
+    label: Portfolio
+    files:
+      - name: bio
+        label: Homepage Bio
+        file: src/lib/content/bio.json
+        format: json
+        fields:
+          - label: Source language
+            name: sourceLanguage
+            widget: hidden
+            default: en
+          - label: Target language
+            name: targetLanguage
+            widget: hidden
+            default: de
+          - label: Text
+            name: strings
+            widget: object
+            summary: Homepage text
+            fields:
+              - label: Student line
+                name: studentLine
+                widget: object
+                collapsed: true
+                fields:
+                  - label: English
+                    name: en
+                    widget: string
+                  - label: German
+                    name: de
+                    widget: string
+                  - label: Source hash
+                    name: sourceHash
+                    widget: hidden
+                    default: faa92177cf35
+              - label: Bio
+                name: bio
+                widget: object
+                fields:
+                  - label: English
+                    name: en
+                    widget: text
+                    buttons: [bold, italic, link]
+                  - label: German
+                    name: de
+                    widget: text
+                    buttons: [bold, italic, link]
+                  - label: Source hash
+                    name: sourceHash
+                    widget: hidden
+                    default: 8e0907df7fb3
